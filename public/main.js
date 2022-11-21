@@ -49,15 +49,15 @@ function sendNewProduct(){
   
 }
 
-function printMessages(messages) {
-  list.innerHTML = '';
-  if(messages.length  !== 0) {
-    messages.forEach(element => {
-      list.insertAdjacentHTML('beforeend', `<li class="list-group-item mb-2"> <span class="username" ><b>${element.username}</b></span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text"><i>${element.message}</i></span></li>`)
-    });
-  }
+// function printMessages(messages) {
+//   list.innerHTML = '';
+//   if(messages.length  !== 0) {
+//     messages.forEach(element => {
+//       list.insertAdjacentHTML('beforeend', `<li class="list-group-item mb-2"> <span class="username" ><b>${element.username}</b></span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text"><i>${element.message}</i></span></li>`)
+//     });
+//   }
 
-}
+// }
 
 function printProducts() {
   console.log('products in printProducts', products)
@@ -91,11 +91,11 @@ productBtn.addEventListener('click', (e) => {
   sendNewProduct();
 })
 
-socket.on('UPDATE_DATA', (data) => {
-  console.log('Estoy recibiendo mensajes', data);
-  messages = data;
-  printMessages(messages);
-})
+// socket.on('UPDATE_DATA', (data) => {
+//   console.log('Estoy recibiendo mensajes', data);
+//   messages = data;
+//   printMessages(messages);
+// })
 
 socket.on('NEW_MESSAGE_FROM_SERVER', (data) => {
   console.log('NEW_MESSAGE_FROM_SERVER > ', data, messages);

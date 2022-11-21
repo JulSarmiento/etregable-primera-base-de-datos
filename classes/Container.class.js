@@ -1,29 +1,52 @@
-const readFiles = require("../utilities/readFile");
-const saveFiles = require("../utilities/saveFiles");
-
+const {v4: uuidv4} = require('uuid');
+const knex = require('knex');
+ 
 class Container {
-  constructor(products) {
-    this.filename = `db/${products}.txt`;
+  constructor(knexConfig, tableName) {
+    this.knexConfig = knexConfig;
+    this.knex = knex(knexConfig)
+    this.tableName = tableName
   }
 
-  async saveProduct(product) {
-    const values = await this.getAll();
-   
-    try {
-      saveFiles(this.filename, [...values, product]);
-      return product;
-    } catch (err) {
-      console.log(err);
-    }
+  async save(product) {
+    product.code = uuidv4();
+
+    return new Promise((resolve, reject) => {
+      this.knex(this.tableName).insert(product)
+      .then(() => {
+        resolve(product)
+      }).catch(err => {
+        reject(err);
+
+      }).finally(() => {
+        this.knex.destroy();
+      })
+    })
   }
 
   async getAll() {
-    try {
-      const products = await readFiles(this.filename);
-      console.log("products array in constructor", products);
-      return products;
-    } catch (err) {
-      console.log(err);
+    try{
+      
+      const data = await this.knex(this.tableName).select('*')    
+
+      if(data.length == 0) {
+        return {
+          success: false,
+          message: 'Empty products list.'
+        }
+      }
+
+      const newData = data.map(i => {
+        return JSON.parse(JSON.stringify(i));
+      })
+
+      return newData
+
+    }catch(err) {
+      return {
+        success: false,
+        message: err.message
+      }
     }
   }
 }
