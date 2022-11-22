@@ -24,6 +24,7 @@ knex.schema.createTable('products', (table) => {
 // messages table
 knex.schema.createTable('messages', (table) => {
   table.increments('id'),
+  table.string('code').notNullable(),
   table.string('username').notNullable(),
   table.string('timestamp').notNullable(),
   table.string('message').notNullable()

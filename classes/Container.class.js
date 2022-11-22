@@ -10,36 +10,33 @@ class Container {
 
   async save(product) {
     product.code = uuidv4();
-
+    
     return new Promise((resolve, reject) => {
       this.knex(this.tableName).insert(product)
       .then(() => {
-        resolve(product)
+        resolve(product);
+
       }).catch(err => {
         reject(err);
 
-      }).finally(() => {
-        this.knex.destroy();
       })
     })
   }
 
-  async getAll() {
-    try{
-      
-      const data = await this.knex(this.tableName).select('*')    
 
+  async getAll() {
+    try{      
+      const data = await this.knex(this.tableName).select('*');    
       if(data.length == 0) {
         return {
           success: false,
           message: 'Empty products list.'
         }
-      }
 
+      };
       const newData = data.map(i => {
         return JSON.parse(JSON.stringify(i));
-      })
-
+      });
       return newData
 
     }catch(err) {
@@ -47,6 +44,7 @@ class Container {
         success: false,
         message: err.message
       }
+      
     }
   }
 }

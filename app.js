@@ -21,20 +21,19 @@ app.use('/static', express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-app.use('/api', indexRouter);
-
+app.use(indexRouter);
 
 io.on('connection', async (socket) => {
-
+  const messages = new Container(knexConfig, `messages`); 
   const products = new Container(knexConfig, `products`);
-
+  
   console.log('Nuevo cliente conectado.');
 
-  // socket.emit('UPDATE_DATA', await container.getAll());
-  // socket.on('NEW_MESSAGE_TO_SERVER', async data => {
-  //   container.saveProduct(data);
-  //   io.sockets.emit('NEW_MESSAGE_FROM_SERVER', data);
-  // })
+  socket.emit('UPDATE_MESSAGES', await messages.getAll());
+  socket.on('NEW_MESSAGE_TO_SERVER', async data => {
+    const message = await messages.save(data)
+    io.sockets.emit('NEW_MESSAGE_FROM_SERVER', message);
+  })
 
   socket.emit('UPDATE_PRODUCTS', await products.getAll() );
   socket.on('NEW_PRODUCT_TO_SERVER', async (data) => {

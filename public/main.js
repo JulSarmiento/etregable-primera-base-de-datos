@@ -49,18 +49,17 @@ function sendNewProduct(){
   
 }
 
-// function printMessages(messages) {
-//   list.innerHTML = '';
-//   if(messages.length  !== 0) {
-//     messages.forEach(element => {
-//       list.insertAdjacentHTML('beforeend', `<li class="list-group-item mb-2"> <span class="username" ><b>${element.username}</b></span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text"><i>${element.message}</i></span></li>`)
-//     });
-//   }
+function printMessages(messages) {
+  list.innerHTML = '';
+  if(messages.length  !== 0) {
 
-// }
+    messages.forEach(element => {
+      list.insertAdjacentHTML('beforeend', `<li class="list-group-item mb-2"> <span class="username" ><b>${element.username}</b></span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text"><i>${element.message}</i></span></li>`)
+    });
+  }
+}
 
 function printProducts() {
-  console.log('products in printProducts', products)
   if(products.length > 0) {
     noProducst.style.display = 'none'
     table.style.display = 'block'
@@ -75,11 +74,12 @@ function printProducts() {
       `)
     });
   } else {
-      table.style.display = 'none'
-      noProducst.style.display = 'block'
-
+    table.style.display = 'none'
+    noProducst.style.display = 'block'
   }
 }
+
+//btn events
 
 chatBtn.addEventListener('click', (e) => {
   e.preventDefault();
@@ -91,11 +91,13 @@ productBtn.addEventListener('click', (e) => {
   sendNewProduct();
 })
 
-// socket.on('UPDATE_DATA', (data) => {
-//   console.log('Estoy recibiendo mensajes', data);
-//   messages = data;
-//   printMessages(messages);
-// })
+//  Sockets messages
+
+socket.on('UPDATE_MESSAGES', (data) => {
+  messages = data;
+  console.log('Estoy recibiendo mensajes', data);
+  printMessages(messages);
+})
 
 socket.on('NEW_MESSAGE_FROM_SERVER', (data) => {
   console.log('NEW_MESSAGE_FROM_SERVER > ', data, messages);
@@ -113,5 +115,5 @@ socket.on('NEW_PRODUCTS_FROM_SERVER', (data) => {
   console.log('data en main.js', data);
   products.push(data);
   console.log('products en main.js', products);
-  printProducts();
+  printProducts(products);
 })

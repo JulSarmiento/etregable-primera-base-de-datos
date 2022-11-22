@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const productsRouter = require('./products/products.router');
+const homeRouter = require('./home/home.router');
 
 router.get('/health', (_req, res) => {
   res.status(200).json({
@@ -9,7 +9,7 @@ router.get('/health', (_req, res) => {
     enviroment: process.env.ENVIROMENT
   });
 })
-.use('/', productsRouter);
+.use('/', homeRouter);
 
 
 
